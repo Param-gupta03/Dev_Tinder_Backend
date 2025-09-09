@@ -1,4 +1,5 @@
 const express=require("express");
+const { adminAuth } = require("./middlewares/auth");
 
 const app = express();
 
@@ -18,16 +19,36 @@ app.get("/user/:userId",(req,res)=>{
 // app.use("/",(req,res)=>{
 //     res.send("Hello from the server!");
 // });
-app.get("/test",(req,res,next)=>{
-    console.log("hello");
-    next();
-},
-(req,res)=>
+// app.get("/test",(req,res,next)=>{
+//     console.log("hello");
+//     next();
+// },
+// (req,res)=>
+// {
+//     console.log("hello2");
+//     res.send("hello hello");
+// }
+// )
+
+
+app.use("/admin",adminAuth);
+
+
+app.use("/admin/alluserdata",(req,res)=>
 {
-    console.log("hello2");
-    res.send("hello hello");
-}
-)
+    res.send("all user data sended");
+});
+app.use("/admin/delete",(req,res)=>{
+    res.send("delete user");
+});
+
+app.use("/",(err,req,res,next)=>{
+    if(err)
+    {
+        res.status(500).send("something went worng");
+    }
+})
+
 
 
 app.listen(3000,()=>{
